@@ -27,16 +27,15 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0;
-            /* Full brightness so photos look great */
-            opacity: 1; 
+            opacity: 1; /* Full brightness */
         }
         
-        /* Dark overlay to ensure text pops */
+        /* Dark overlay for text contrast */
         #slideshow::after {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.2); /* Slight dark tint */
+            background: rgba(0, 0, 0, 0.2); 
         }
         
         .slide {
@@ -102,7 +101,6 @@
 
         /* --- MAIN CARD (INVISIBLE) --- */
         .card {
-            /* Fully Transparent */
             background: transparent; 
             border: none;
             box-shadow: none;
@@ -143,9 +141,8 @@
 
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         
-        /* Stronger Text Shadow for Readability */
         h1 { 
-            color: #fff; /* White text looks better on photos */
+            color: #fff;
             font-size: 32px; 
             margin: 0 0 40px 0; 
             line-height: 1.3; 
@@ -191,7 +188,7 @@
             font-weight: 800; 
             font-size: 22px; 
             font-style: italic;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.7); /* Black shadow for visibility */
+            text-shadow: 0 2px 5px rgba(0,0,0,0.7);
         }
         
         #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
@@ -268,7 +265,7 @@
 
         function startGame() {
             // --- AUDIO SETTINGS ---
-            bgMusic.volume = 0.1;       // 10% Volume (Very Low)
+            bgMusic.volume = 0.1;       // 10% Volume
             bgMusic.playbackRate = 1.0; // Normal Speed
             
             successSound.volume = 0.5;  // 50% Volume
@@ -325,7 +322,18 @@
         }
 
         yesBtn.addEventListener('click', () => {
+            // --- SUCCESS SOUND LOOP LOGIC ---
+            successSound.loop = true; // Enable loop
             successSound.play().catch(() => {});
+            
+            // Stop looping after 3 seconds
+            setTimeout(() => {
+                successSound.pause();
+                successSound.currentTime = 0;
+                successSound.loop = false;
+            }, 3000);
+
+            // Visual Updates
             mascotEmoji.style.display = 'none';
             mascotImg.style.display = 'block';
             mascotImg.style.animation = 'popScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
