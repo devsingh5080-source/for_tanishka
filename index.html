@@ -27,8 +27,16 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0;
-            /* High opacity to keep photos bright */
-            opacity: 0.85; 
+            /* Full brightness so photos look great */
+            opacity: 1; 
+        }
+        
+        /* Dark overlay to ensure text pops */
+        #slideshow::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.2); /* Slight dark tint */
         }
         
         .slide {
@@ -46,8 +54,8 @@
         #start-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
             z-index: 99999;
             display: flex;
             justify-content: center;
@@ -92,21 +100,19 @@
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- MAIN CARD (CRYSTAL CLEAR GLASS) --- */
+        /* --- MAIN CARD (INVISIBLE) --- */
         .card {
-            /* 10% Opacity - Very see-through */
-            background: rgba(255, 255, 255, 0.1); 
-            /* Subtle blur to separate text from photo details */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 40px;
-            padding: 40px 20px;
+            /* Fully Transparent */
+            background: transparent; 
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            
+            padding: 20px;
             text-align: center;
-            width: 90%;
+            width: 100%;
             max-width: 600px;
             min-height: 500px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
             z-index: 10;
             display: none;
             flex-direction: column;
@@ -116,36 +122,36 @@
         }
 
         .mascot-img {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             object-fit: cover;
             border-radius: 50%;
             border: 4px solid #ff4d8f;
             margin-bottom: 20px;
             animation: bounce 2.5s infinite ease-in-out;
             display: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
 
         .mascot-emoji {
-            font-size: 80px; 
+            font-size: 90px; 
             margin-bottom: 20px; 
             animation: bounce 2.5s infinite ease-in-out;
             display: block;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
         }
 
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         
-        /* Text Highlighting for better readability on photos */
+        /* Stronger Text Shadow for Readability */
         h1 { 
-            color: #222; 
-            font-size: 28px; 
+            color: #fff; /* White text looks better on photos */
+            font-size: 32px; 
             margin: 0 0 40px 0; 
             line-height: 1.3; 
-            /* Strong white glow behind text */
-            text-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 5px rgba(255,255,255,1);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 20px rgba(255, 77, 143, 0.5);
         }
-        .highlight { color: #ff2e7a; font-weight: 800; }
+        .highlight { color: #ff4d8f; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
 
         .btn-box { position: relative; width: 100%; height: 200px; display: flex; justify-content: center; align-items: flex-start; }
         
@@ -159,7 +165,7 @@
             cursor: pointer;
             position: absolute;
             transition: transform 0.2s, background 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         #yes-btn { 
@@ -181,20 +187,20 @@
         #msg-box { 
             min-height: 30px; 
             margin-top: 20px; 
-            color: #ff2e7a; 
+            color: #fff; 
             font-weight: 800; 
-            font-size: 20px; 
+            font-size: 22px; 
             font-style: italic;
-            text-shadow: 0 0 10px rgba(255,255,255,0.9);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.7); /* Black shadow for visibility */
         }
         
         #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
         @media (max-width: 600px) {
             .card { padding: 30px 15px; }
-            h1 { font-size: 24px; }
+            h1 { font-size: 26px; }
             .mascot-emoji { font-size: 70px; }
-            .mascot-img { width: 120px; height: 120px; }
+            .mascot-img { width: 130px; height: 130px; }
             .btn { font-size: 18px; padding: 14px 30px; }
         }
     </style>
@@ -261,10 +267,12 @@
         const bgMusic = document.getElementById('bg-music');
 
         function startGame() {
-            // --- VOLUME TUNING ---
-            bgMusic.volume = 0.05;      // 5% (Whisper Quiet)
-            successSound.volume = 0.5;  // 50% Standard
-            dodgeSound.volume = 0.45;   // 45% Tuned Dodge
+            // --- AUDIO SETTINGS ---
+            bgMusic.volume = 0.1;       // 10% Volume (Very Low)
+            bgMusic.playbackRate = 1.0; // Normal Speed
+            
+            successSound.volume = 0.5;  // 50% Volume
+            dodgeSound.volume = 0.45;   // 45% Volume
 
             bgMusic.play().catch(e => console.log("Audio failed:", e));
             dodgeSound.play().then(() => { dodgeSound.pause(); dodgeSound.currentTime=0; });
@@ -310,7 +318,6 @@
             msgBox.innerText = messages[dodgeCount % messages.length];
             dodgeCount++;
             
-            // Progressive Scaling
             const yesScale = Math.min(1 + (dodgeCount * 0.08), 1.35); 
             const noScale = Math.max(1 - (dodgeCount * 0.1), 0.5);
             yesBtn.style.transform = `scale(${yesScale})`;
